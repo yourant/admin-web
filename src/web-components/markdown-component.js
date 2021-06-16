@@ -25,7 +25,7 @@ class MarkdownComponent extends HTMLElement {
     // 加载 flowchart 图表
     const flowchartScript = document.createElement("script");
     flowchartScript.innerHTML = `
-      const flowchartDoms = document.querySelectorAll('.md-flowchart')
+      var flowchartDoms = document.querySelectorAll('.md-flowchart')
 
       if (flowchartDoms.length > 0) {
         let raphaelLoad = false, flowchartLoad = false
@@ -44,21 +44,36 @@ class MarkdownComponent extends HTMLElement {
           })
         }
 
-        const raphaelScript = document.createElement("script")
-        raphaelScript.onload = () => {
+        var raphaelScriptLoad = () => {
           raphaelLoad = true
           if (flowchartLoad) scriptLoad()
         }
-        raphaelScript.src = 'http://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js'
-        document.body.appendChild(raphaelScript)
-        
-        const flowchartScript = document.createElement("script")
-        flowchartScript.onload = () => {
+
+        if (document.querySelector('script#raphael')) {
+          raphaelScriptLoad()
+        } else {
+          const raphaelScript = document.createElement("script")
+          raphaelScript.onload = raphaelScriptLoad
+          raphaelScript.src = 'http://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js'
+          raphaelScript.id = 'raphael'
+          document.body.appendChild(raphaelScript)
+        }
+
+        var flowchartScriptLoad = () => {
           flowchartLoad = true
           if (raphaelLoad) scriptLoad()
         }
-        flowchartScript.src = 'https://cdn.tutorialjinni.com/flowchart/1.14.1/flowchart.min.js'
-        document.body.appendChild(flowchartScript)
+
+        if (document.querySelector('script#flowchart')) {
+          flowchartScriptLoad()
+        } else {
+          const flowchartScript = document.createElement("script")
+          flowchartScript.onload = flowchartScriptLoad
+          flowchartScript.src = 'https://cdn.tutorialjinni.com/flowchart/1.14.1/flowchart.min.js'
+          flowchartScript.id = 'flowchart'
+          document.body.appendChild(flowchartScript)
+        }
+        
       }
     `;
     shadow.appendChild(flowchartScript);
@@ -66,11 +81,11 @@ class MarkdownComponent extends HTMLElement {
     // 加载 echarts 图表
     const echartsScript = document.createElement("script");
     echartsScript.innerHTML = `
-      const echartDoms = document.querySelectorAll('.md-echarts')
+      var echartDoms = document.querySelectorAll('.md-echarts')
 
       if (echartDoms.length > 0) {
-        const echartsScript = document.createElement("script")
-        echartsScript.onload = () => {
+
+        var echartsScript = () => {
           echartDoms.forEach(element => {
             try {
               let options = JSON.parse(element.textContent)
@@ -81,8 +96,17 @@ class MarkdownComponent extends HTMLElement {
             }
           })
         }
-        echartsScript.src = 'https://lib.baomitu.com/echarts/5.1.2/echarts.min.js'
-        document.body.appendChild(echartsScript)
+
+        if (document.querySelector('script#echarts')) {
+          echartsScript()
+        } else {
+          const echartsScript = document.createElement("script")
+          echartsScript.onload = echartsScript
+          echartsScript.src = 'https://lib.baomitu.com/echarts/5.1.2/echarts.min.js'
+          echartsScript.id = 'echarts'
+          document.body.appendChild(echartsScript)
+        }
+
       }
     `;
     shadow.appendChild(echartsScript);
