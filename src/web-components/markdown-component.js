@@ -28,28 +28,9 @@ class MarkdownComponent extends HTMLElement {
       const flowchartDoms = document.querySelectorAll('.md-flowchart')
 
       if (flowchartDoms.length > 0) {
+        let raphaelLoad = false, flowchartLoad = false
 
-        const raphaelScript = document.createElement("script")
-        raphaelScript.src = 'http://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js'
-        document.body.appendChild(raphaelScript)
-        
-        const flowchartScript = document.createElement("script")
-        flowchartScript.src = 'https://cdn.tutorialjinni.com/flowchart/1.14.1/flowchart.min.js'
-        document.body.appendChild(flowchartScript)
-
-        setTimeout(async () => {
-          let max = 40
-          while (true && max > 0) {
-            if (!(window.flowchart && window.Raphael && window.flowchart.parse)) {
-              await new Promise(resolve => {
-                setTimeout(resolve, 500)
-              })
-            } else {
-              break
-            }
-            max--
-          }
-
+        function scriptLoad() {
           flowchartDoms.forEach(element => {
             try {
               let code = element.textContent
@@ -61,8 +42,23 @@ class MarkdownComponent extends HTMLElement {
               element.outerHTML = '<pre>flowchart 解析失败了: ' + e + '</pre>'
             }
           })
+        }
 
-        })
+        const raphaelScript = document.createElement("script")
+        raphaelScript.onload = () => {
+          raphaelLoad = true
+          if (flowchartLoad) scriptLoad()
+        }
+        raphaelScript.src = 'http://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js'
+        document.body.appendChild(raphaelScript)
+        
+        const flowchartScript = document.createElement("script")
+        flowchartScript.onload = () => {
+          flowchartLoad = true
+          if (raphaelLoad) scriptLoad()
+        }
+        flowchartScript.src = 'https://cdn.tutorialjinni.com/flowchart/1.14.1/flowchart.min.js'
+        document.body.appendChild(flowchartScript)
       }
     `;
     shadow.appendChild(flowchartScript);
@@ -73,24 +69,8 @@ class MarkdownComponent extends HTMLElement {
       const echartDoms = document.querySelectorAll('.md-echarts')
 
       if (echartDoms.length > 0) {
-
         const echartsScript = document.createElement("script")
-        echartsScript.src = 'https://lib.baomitu.com/echarts/5.1.2/echarts.min.js'
-        document.body.appendChild(echartsScript)
-
-        setTimeout(async () => {
-          let max = 40
-          while (true && max > 0) {
-            if (!(window.echarts && window.echarts.init)) {
-              await new Promise(resolve => {
-                setTimeout(resolve, 500)
-              })
-            } else {
-              break
-            }
-            max--
-          }
-
+        echartsScript.onload = () => {
           echartDoms.forEach(element => {
             try {
               let options = JSON.parse(element.textContent)
@@ -100,8 +80,9 @@ class MarkdownComponent extends HTMLElement {
               element.outerHTML = '<pre>echarts 图表解析失败了: ' + e + '</pre>'
             }
           })
-
-        })
+        }
+        echartsScript.src = 'https://lib.baomitu.com/echarts/5.1.2/echarts.min.js'
+        document.body.appendChild(echartsScript)
       }
     `;
     shadow.appendChild(echartsScript);
