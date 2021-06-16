@@ -23,11 +23,8 @@ export default defineComponent({
   methods: {
     async test() {
       const response = await fetch("/api");
-      const json = await response.json();
-      this.markdownHtml = `<markdown-component>
-        <style slot="style">${json.css}</style>
-        <div slot="content">${json.html}</div>
-      </markdown-component>`;
+      const markdownHtml = await response.text();
+      this.markdownHtml = markdownHtml;
     },
   },
 });
