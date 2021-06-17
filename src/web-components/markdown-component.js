@@ -49,13 +49,13 @@ class MarkdownComponent extends HTMLElement {
           if (flowchartLoad) scriptLoad()
         }
 
-        if (document.querySelector('script#raphael')) {
+        if (document.querySelector('script#raphael-script')) {
           raphaelScriptLoad()
         } else {
           const raphaelScript = document.createElement("script")
           raphaelScript.onload = raphaelScriptLoad
           raphaelScript.src = 'http://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js'
-          raphaelScript.id = 'raphael'
+          raphaelScript.id = 'raphael-script'
           document.body.appendChild(raphaelScript)
         }
 
@@ -64,13 +64,13 @@ class MarkdownComponent extends HTMLElement {
           if (raphaelLoad) scriptLoad()
         }
 
-        if (document.querySelector('script#flowchart')) {
+        if (document.querySelector('script#flowchart-script')) {
           flowchartScriptLoad()
         } else {
           const flowchartScript = document.createElement("script")
           flowchartScript.onload = flowchartScriptLoad
           flowchartScript.src = 'https://cdn.tutorialjinni.com/flowchart/1.14.1/flowchart.min.js'
-          flowchartScript.id = 'flowchart'
+          flowchartScript.id = 'flowchart-script'
           document.body.appendChild(flowchartScript)
         }
         
@@ -85,7 +85,7 @@ class MarkdownComponent extends HTMLElement {
 
       if (echartDoms.length > 0) {
 
-        var echartsScript = () => {
+        var echartsScriptLoad = () => {
           echartDoms.forEach(element => {
             try {
               let options = JSON.parse(element.textContent)
@@ -97,13 +97,13 @@ class MarkdownComponent extends HTMLElement {
           })
         }
 
-        if (document.querySelector('script#echarts')) {
-          echartsScript()
+        if (document.querySelector('script#echarts-script')) {
+          echartsScriptLoad()
         } else {
           const echartsScript = document.createElement("script")
-          echartsScript.onload = echartsScript
+          echartsScript.onload = echartsScriptLoad
           echartsScript.src = 'https://lib.baomitu.com/echarts/5.1.2/echarts.min.js'
-          echartsScript.id = 'echarts'
+          echartsScript.id = 'echarts-script'
           document.body.appendChild(echartsScript)
         }
 
